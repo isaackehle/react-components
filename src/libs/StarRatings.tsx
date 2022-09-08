@@ -37,18 +37,6 @@ const StarRatings = () => {
       ))}
     </dl>
   );
-
-  // return (
-  //   <dl>
-  //     {rating.map((x, i) => (
-  //       <React.Fragment key={i}>pickStar(x, i)</React.Fragment>
-  //     ))}
-  //   </dl>
-  // );
-
-  // return rating.map((x, i) => {
-  //   return pickStar(x, i);
-  // });
 };
 
 export default StarRatings;
