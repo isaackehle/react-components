@@ -1,3 +1,4 @@
+import CountryAutocomplete from "./CountryAutocomplete";
 import StarRatings from "./StarRatings";
 
-export { StarRatings };
+export { CountryAutocomplete, StarRatings };
