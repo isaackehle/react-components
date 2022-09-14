@@ -1,7 +1,7 @@
 import { Card, Col, Container, Row } from "react-bootstrap";
 import "typeface-roboto";
 import "./App.css";
-import { CountryAutocomplete, StarRatings } from "./libs/";
+import { CountryAutocomplete, DrugAutocomplete, StarRatings } from "./libs/";
 
 function App() {
   return (
@@ -19,8 +19,17 @@ function App() {
             </Col>
           </Row>
           <Row>
-            <Col>
+            <Col xs={6}>
               <Card bg="light" text="dark" className="mb-2">
+                <Card.Title>Drug Autocomplete</Card.Title>
+                <Card.Body>
+                  <DrugAutocomplete />
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col xs={6}>
+              <Card bg="light" text="dark" className="mb-2">
+                <Card.Title>Country Autocomplete</Card.Title>
                 <Card.Body>
                   <CountryAutocomplete />
                 </Card.Body>
