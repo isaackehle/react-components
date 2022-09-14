@@ -28,20 +28,14 @@ export default function Autocomplete({ input = [], min_search_len = 0, handler =
     return filtered;
   };
 
-  // const [filtered, setFiltered] = useState<string[]>([]);
   const [searchVal, setSearchVal] = useState("");
-
-  const onListItemClick = (value: string) => setSearchVal(value);
-
-  const onSearchChange = (e: any) => setSearchVal(e.target.value);
-
   const filtered = FilterInputs(searchVal, min_search_len, input);
 
   return (
     <div>
       <Form>
         <Form.Group>
-          <Form.Control value={searchVal} type="text" onChange={onSearchChange}></Form.Control>
+          <Form.Control value={searchVal} type="text" onChange={(e) => setSearchVal(e.target.value)}></Form.Control>
         </Form.Group>
       </Form>
 
@@ -50,7 +44,7 @@ export default function Autocomplete({ input = [], min_search_len = 0, handler =
 
       <Stack gap={3}>
         {filtered.map((str, key) => (
-          <div key={key} className="bg-light border" onClick={() => onListItemClick(str)}>
+          <div key={key} className="bg-light border" onClick={() => setSearchVal(str)}>
             {str}
           </div>
         ))}
