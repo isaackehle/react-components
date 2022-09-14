@@ -1,3 +1,3 @@
-# react-stars
+# react-components
 
-"You bet your lucky stars!"
+My little library to learn more about building React components.
