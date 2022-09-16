@@ -1,7 +1,7 @@
 import { countries } from "countries-list";
 import Autocomplete from "./Autocomplete";
 
-const MIN = 3;
+const MIN_LEN = 3;
 
 export default function CountryAutocomplete() {
   const countriesToStrings = (): string[] => {
@@ -17,7 +17,7 @@ export default function CountryAutocomplete() {
 
   return (
     <div>
-      <Autocomplete min_search_len={MIN} input={countriesToStrings()}></Autocomplete>
+      <Autocomplete min_len={MIN_LEN} input={countriesToStrings()}></Autocomplete>
     </div>
   );
 }

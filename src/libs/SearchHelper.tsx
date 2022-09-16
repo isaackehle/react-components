@@ -1,7 +1,7 @@
-export default function SearchHelper({ value = "", min_search_len = 0 }) {
+export default function SearchHelper({ value = "", min_len = 0 }) {
   const minHelper = () => {
-    if (!min_search_len) return <></>;
-    return <span className="search-value-min-len">(minimum of {min_search_len} characters)</span>;
+    if (!min_len) return <></>;
+    return <span className="search-value-min-len">(minimum of {min_len} characters)</span>;
   };
 
   return (

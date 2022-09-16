@@ -7,11 +7,11 @@ type AutocompleteHandler = (value: string) => void;
 
 interface AutocompleteProps {
   input: string[];
-  min_search_len?: number;
+  min_len?: number;
   handler?: AutocompleteHandler | null;
 }
 
-export default function Autocomplete({ input = [], min_search_len = 0, handler = null }: AutocompleteProps) {
+export default function Autocomplete({ input = [], min_len = 0, handler = null }: AutocompleteProps) {
   const FilterInputs = (val: string, min: number, input: string[]) => {
     const [filtered, setFiltered] = useState<string[]>([]);
 
@@ -29,7 +29,7 @@ export default function Autocomplete({ input = [], min_search_len = 0, handler =
   };
 
   const [searchVal, setSearchVal] = useState("");
-  const filtered = FilterInputs(searchVal, min_search_len, input);
+  const filtered = FilterInputs(searchVal, min_len, input);
 
   return (
     <div>
@@ -39,8 +39,8 @@ export default function Autocomplete({ input = [], min_search_len = 0, handler =
         </Form.Group>
       </Form>
 
-      <SearchHelper value={searchVal} min_search_len={min_search_len}></SearchHelper>
-      <ResultsHelper value={searchVal} min={min_search_len} list={filtered}></ResultsHelper>
+      <SearchHelper value={searchVal} min_len={min_len}></SearchHelper>
+      <ResultsHelper value={searchVal} min_len={min_len} list={filtered}></ResultsHelper>
 
       <Stack gap={3}>
         {filtered.map((str, key) => (
