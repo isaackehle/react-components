@@ -28,6 +28,11 @@ export default function Autocomplete({ input = [], min_len = 0, handler = null }
     return filtered;
   };
 
+  const itemClicked = (str: string) => {
+    if (handler) handler(str);
+    else setSearchVal(str);
+  };
+
   const [searchVal, setSearchVal] = useState("");
   const filtered = FilterInputs(searchVal, min_len, input);
 
@@ -44,7 +49,7 @@ export default function Autocomplete({ input = [], min_len = 0, handler = null }
 
       <Stack gap={3}>
         {filtered.map((str, key) => (
-          <div key={key} className="bg-light border" onClick={() => setSearchVal(str)}>
+          <div key={key} className="bg-light border" onClick={() => itemClicked(str)}>
             {str}
           </div>
         ))}
