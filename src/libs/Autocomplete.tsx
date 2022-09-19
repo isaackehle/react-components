@@ -6,14 +6,22 @@ import SearchHelper from "./SearchHelper";
 type AutocompleteHandler = (value: string) => void;
 
 interface AutocompleteProps {
-  input: string[];
+  input: AutocompleteInputData[];
   min_len?: number;
   handler?: AutocompleteHandler | null;
 }
 
+export interface AutocompleteInputData {
+  key: string;
+  val: string;
+}
+
 export default function Autocomplete({ input = [], min_len = 0, handler = null }: AutocompleteProps) {
-  const FilterInputs = (val: string, min: number, input: string[]) => {
-    const [filtered, setFiltered] = useState<string[]>([]);
+  const matches = (data: AutocompleteInputData, val: string) =>
+    data.key.toLowerCase().includes(val.toLowerCase()) || data.val.toLowerCase().includes(val.toLowerCase());
+
+  const FilterInputs = (val: string, min: number, input: AutocompleteInputData[]) => {
+    const [filtered, setFiltered] = useState<AutocompleteInputData[]>([]);
 
     useEffect(() => {
       if (!val) {
@@ -22,15 +30,15 @@ export default function Autocomplete({ input = [], min_len = 0, handler = null }
       }
 
       if (min && val.length < min) return setFiltered([]);
-      return setFiltered(input.filter((str: string) => str.toLowerCase().includes(val.toLowerCase())));
+      return setFiltered(input.filter((x: AutocompleteInputData) => matches(x, val)));
     }, [val, min, input]);
 
     return filtered;
   };
 
-  const itemClicked = (str: string) => {
-    if (handler) handler(str);
-    else setSearchVal(str);
+  const itemClicked = (data: AutocompleteInputData) => {
+    if (handler) handler(data.key);
+    else setSearchVal(data.val);
   };
 
   const [searchVal, setSearchVal] = useState("");
@@ -45,12 +53,12 @@ export default function Autocomplete({ input = [], min_len = 0, handler = null }
       </Form>
 
       <SearchHelper value={searchVal} min_len={min_len}></SearchHelper>
-      <ResultsHelper value={searchVal} min_len={min_len} list={filtered}></ResultsHelper>
+      <ResultsHelper value={searchVal} min_len={min_len} list_len={filtered.length}></ResultsHelper>
 
       <Stack gap={3}>
-        {filtered.map((str, key) => (
-          <div key={key} className="bg-light border" onClick={() => itemClicked(str)}>
-            {str}
+        {filtered.map((data, key) => (
+          <div key={key} className="bg-light border" onClick={() => itemClicked(data)}>
+            {data.val}
           </div>
         ))}
       </Stack>

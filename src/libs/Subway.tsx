@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Col, Container, Row, Stack } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import Autocomplete from "./Autocomplete";
+import Autocomplete, { AutocompleteInputData } from "./Autocomplete";
 
 interface TrainStation {
   id: string;
@@ -36,38 +36,36 @@ interface StationArrivalResponse {
 }
 
 export default function Subway() {
-  const [trainStations, setTrainStationList] = useState<TrainStation[]>([]);
-  const [stationNames, setStationNames] = useState<string[]>([]);
+  const [selectedStation, setSelectedStation] = useState<TrainStation>();
+  const [trainStations, setTrainStations] = useState<TrainStation[]>([]);
+  const [stationList, setStationList] = useState<AutocompleteInputData[]>([]);
   const [stationArrivalTimes, setStationArrivalTimes] = useState<StationArrivalPerDirection[]>([]);
 
   const getTrainStations = async () => {
     const data = await fetch("https://raw.githubusercontent.com/jonthornton/MTAPI/master/data/stations.json", { method: "GET" });
     const json = await data.json();
 
-    const stations = Object.keys(json).reduce((accum, key) => {
-      const k = key as keyof typeof json;
-      const station = json[k];
-      accum.push(station);
-      return accum;
-    }, [] as TrainStation[]);
+    const stations = Object.keys(json)
+      .reduce((accum, key) => {
+        const k = key as keyof typeof json;
+        return accum.concat(json[k]);
+      }, [] as TrainStation[])
+      .sort((a, b) => (a.name > b.name ? 1 : -1));
 
-    console.log(stations);
+    setTrainStations(stations);
 
-    setTrainStationList(stations);
-
-    setStationNames(stations.map((station) => station.name));
+    setStationList(stations.map((station) => ({ key: station.id, val: `[id: 0x${station.id}] ${station.name}` })));
   };
 
-  const stationClicked = (value: string) => {
-    console.log(value);
-
-    const station = trainStations.find((x) => x.name === value);
-    if (station) showArrivalTimes(station);
+  const stationSelected = (id: string) => {
+    const station = trainStations.find((x) => x.id === id);
+    if (station) {
+      setSelectedStation(station);
+      showArrivalTimes(station);
+    }
   };
 
   const showArrivalTimes = async (station: TrainStation) => {
-    console.log(station.id);
-
     const data = await fetch(`https://api.wheresthefuckingtrain.com/by-id/${station.id}`, { method: "GET" });
     const json: StationArrivalResponse = await data.json();
 
@@ -88,7 +86,6 @@ export default function Subway() {
       return accum;
     }, [] as StationArrivalPerDirection[]);
 
-    // console.log({ arrivalTimes });
     setStationArrivalTimes(arrivalTimes);
   };
 
@@ -96,56 +93,53 @@ export default function Subway() {
     <div>
       <Container fluid>
         <Row>
-          <Col xs={12}>
-            <Button variant="primary" onClick={getTrainStations}>
-              Get Trains
-            </Button>
-          </Col>
-        </Row>
-        <Row>
           <Col xs={6}>
-            <Autocomplete input={stationNames} min_len={0} handler={stationClicked}></Autocomplete>
+            <Container fluid>
+              <Row>
+                <Col xs={12}>
+                  <Button variant="primary" onClick={getTrainStations}>
+                    Get Trains
+                  </Button>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12}>
+                  <Autocomplete input={stationList} min_len={0} handler={stationSelected}></Autocomplete>
+                </Col>
+              </Row>
+            </Container>
           </Col>
-
-          {/* <Col xs={6}>
-            <Stack gap={3}>
-              {trainStations.map((station, key) => (
-                <div key={key} className="bg-light border" onClick={() => showArrivalTimes(station)}>
-                  {station.name}
-                </div>
-              ))}
-            </Stack>
-          </Col> */}
           <Col xs={6}>
-            <Stack gap={3}>
-              {stationArrivalTimes.map((arrivalTime, key) => (
-                <div key={key} className="bg-light border">
-                  {arrivalTime.dir}: [{arrivalTime.route}] {arrivalTime.time}
-                </div>
-              ))}
-            </Stack>
+            {selectedStation && (
+              <Container fluid>
+                <Row>
+                  <Col>
+                    <strong>Station Name:</strong> {selectedStation.name}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <strong>0x{selectedStation.id}</strong>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>latitude: {selectedStation.location[0]}</Col>
+                  <Col>longitude: {selectedStation.location[1]}</Col>
+                </Row>
+                <Row>
+                  <Stack gap={3}>
+                    {stationArrivalTimes.map((arrivalTime, key) => (
+                      <div key={key} className="bg-light border">
+                        {arrivalTime.dir}: [{arrivalTime.route}] {arrivalTime.time}
+                      </div>
+                    ))}
+                  </Stack>
+                </Row>
+              </Container>
+            )}
           </Col>
         </Row>
       </Container>
     </div>
   );
 }
-
-// const FilterInputs = (val: string, min: number, input: string[]) => {
-//   const [filtered, setFiltered] = useState<string[]>([]);
-
-//   useEffect(() => {
-//     if (!val) {
-//       if (min) return setFiltered([]);
-//       return setFiltered(input);
-//     }
-
-//     if (min && val.length < min) return setFiltered([]);
-//     return setFiltered(input.filter((str: string) => str.toLowerCase().includes(val.toLowerCase())));
-//   }, [val, min, input]);
-
-//   return filtered;
-// };
-
-// const [searchVal, setSearchVal] = useState("");
-// const filtered = FilterInputs(searchVal, min_len, input);

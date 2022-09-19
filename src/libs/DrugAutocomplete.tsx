@@ -1,4 +1,4 @@
-import Autocomplete from "./Autocomplete";
+import Autocomplete, { AutocompleteInputData } from "./Autocomplete";
 
 const drugs = [
   "Abreva",
@@ -18,9 +18,15 @@ const drugs = [
 ];
 
 export default function DrugAutocomplete() {
+  const buildInputData = (): AutocompleteInputData[] =>
+    drugs.map((drug) => {
+      const data: AutocompleteInputData = { key: drug, val: drug };
+      return data;
+    });
+
   return (
     <div>
-      <Autocomplete input={drugs}></Autocomplete>
+      <Autocomplete input={buildInputData()}></Autocomplete>
     </div>
   );
 }

@@ -1,23 +1,24 @@
 import { countries } from "countries-list";
-import Autocomplete from "./Autocomplete";
+import Autocomplete, { AutocompleteInputData } from "./Autocomplete";
 
 const MIN_LEN = 3;
 
 export default function CountryAutocomplete() {
-  const countriesToStrings = (): string[] => {
+  const countriesToData = (): AutocompleteInputData[] => {
     return Object.keys(countries).reduce((accum, abbr) => {
       const key = abbr as keyof typeof countries;
       const country = countries[key];
-      accum.push(`${key}: ${country.name}`);
+      const data: AutocompleteInputData = { key, val: `${key}: ${country.name}` };
+      accum.push(data);
       return accum;
-    }, [] as string[]);
+    }, [] as AutocompleteInputData[]);
   };
 
   // const filteredCountries = (search?: string) => {};
 
   return (
     <div>
-      <Autocomplete min_len={MIN_LEN} input={countriesToStrings()}></Autocomplete>
+      <Autocomplete min_len={MIN_LEN} input={countriesToData()}></Autocomplete>
     </div>
   );
 }
