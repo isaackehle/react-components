@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Col, Container, Row, Stack } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Autocomplete, { AutocompleteInputData } from "./Autocomplete";
-
+import SimpleMap from "./SimpleMap";
 interface TrainStation {
   id: string;
   location: number[];
@@ -125,6 +125,11 @@ export default function Subway() {
                 <Row>
                   <Col>latitude: {selectedStation.location[0]}</Col>
                   <Col>longitude: {selectedStation.location[1]}</Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <SimpleMap lat={selectedStation.location[0]} lng={selectedStation.location[1]}></SimpleMap>
+                  </Col>
                 </Row>
                 <Row>
                   <Stack gap={3}>
