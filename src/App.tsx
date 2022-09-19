@@ -1,13 +1,23 @@
 import { Card, Col, Container, Row } from "react-bootstrap";
 import "typeface-roboto";
 import "./App.css";
-import { CountryAutocomplete, DrugAutocomplete, StarRatings } from "./libs/";
+import { CountryAutocomplete, DrugAutocomplete, StarRatings, Subway } from "./libs/";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <Container fluid>
+          <Row>
+            <Col xs={12}>
+              <Card bg="light" text="dark" className="mb-2">
+                <Card.Body>
+                  <Card.Title>Subway</Card.Title>
+                  <Subway />
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
           <Row>
             <Col>
               <Card style={{ width: "18rem" }} bg="light" text="dark" className="mb-2">
