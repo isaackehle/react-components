@@ -1,13 +1,19 @@
 import { useState } from "react";
 import { Col, Container, Row, Stack } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import Autocomplete, { AutocompleteInputData } from "./Autocomplete";
-import SimpleMap from "./SimpleMap";
+import { Autocomplete, AutocompleteInputData, SimpleMap, MapLocation } from "../libs";
+
 interface TrainStation {
   id: string;
   location: number[];
   name: string;
   stops: any;
+}
+
+interface SelectedTrainStation {
+  id: string;
+  location: MapLocation;
+  name: string;
 }
 
 interface StationArrival {
@@ -36,7 +42,7 @@ interface StationArrivalResponse {
 }
 
 export default function Subway() {
-  const [selectedStation, setSelectedStation] = useState<TrainStation>();
+  const [selectedStation, setSelectedStation] = useState<SelectedTrainStation>();
   const [trainStations, setTrainStations] = useState<TrainStation[]>([]);
   const [stationList, setStationList] = useState<AutocompleteInputData[]>([]);
   const [stationArrivalTimes, setStationArrivalTimes] = useState<StationArrivalPerDirection[]>([]);
@@ -60,7 +66,11 @@ export default function Subway() {
   const stationSelected = (id: string) => {
     const station = trainStations.find((x) => x.id === id);
     if (station) {
-      setSelectedStation(station);
+      setSelectedStation({
+        id: station.id,
+        name: station.name,
+        location: { lat: station.location[0], lng: station.location[1], address: station.name },
+      });
       showArrivalTimes(station);
     }
   };
@@ -123,12 +133,12 @@ export default function Subway() {
                   </Col>
                 </Row>
                 <Row>
-                  <Col>latitude: {selectedStation.location[0]}</Col>
-                  <Col>longitude: {selectedStation.location[1]}</Col>
+                  <Col>latitude: {selectedStation.location.lat}</Col>
+                  <Col>longitude: {selectedStation.location.lng}</Col>
                 </Row>
                 <Row>
                   <Col>
-                    <SimpleMap lat={selectedStation.location[0]} lng={selectedStation.location[1]}></SimpleMap>
+                    <SimpleMap location={selectedStation.location} zoomLevel={14}></SimpleMap>
                   </Col>
                 </Row>
                 <Row>

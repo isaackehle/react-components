@@ -1,7 +1,7 @@
 import { Card, Col, Container, Row } from "react-bootstrap";
 import "typeface-roboto";
 import "./App.css";
-import { CountryAutocomplete, DrugAutocomplete, StarRatings, Subway } from "./libs/";
+import { CountryAutocomplete, DrugAutocomplete, StarRatings, Subway } from "./components";
 
 function App() {
   return (

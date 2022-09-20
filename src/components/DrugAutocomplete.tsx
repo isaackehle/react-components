@@ -1,4 +1,4 @@
-import Autocomplete, { AutocompleteInputData } from "./Autocomplete";
+import { Autocomplete, AutocompleteInputData } from "../libs";
 
 const drugs = [
   "Abreva",

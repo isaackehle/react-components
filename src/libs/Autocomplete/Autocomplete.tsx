@@ -1,7 +1,7 @@
 import { Form, Stack } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import ResultsHelper from "./ResultsHelper";
-import SearchHelper from "./SearchHelper";
+import ResultsHelper from "../ResultsHelper";
+import SearchHelper from "../SearchHelper";
 
 type AutocompleteHandler = (value: string) => void;
 

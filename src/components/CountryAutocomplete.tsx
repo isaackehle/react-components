@@ -1,5 +1,5 @@
 import { countries } from "countries-list";
-import Autocomplete, { AutocompleteInputData } from "./Autocomplete";
+import { Autocomplete, AutocompleteInputData } from "../libs";
 
 const MIN_LEN = 3;
 
